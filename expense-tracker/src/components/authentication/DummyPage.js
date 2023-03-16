@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 const DummyPage = () => {
     const history = useHistory()
     const CompleteProfileHandler = () => {
@@ -9,8 +9,11 @@ const DummyPage = () => {
         Fragment >
         <
         h1 > Welcome to expense tracker!!! < /h1> <
-        h4 type = "button"
-        onClick = { CompleteProfileHandler } > your profile is incomplete.Complete Now < /h4> <
+        h4 >
+        your profile is incomplete. { ' ' } <
+        Link to = "/complete-profile"
+        onClick = { CompleteProfileHandler } > Complete Now < /Link> <
+        /h4>        <
         /Fragment>
     )
 };
