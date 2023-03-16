@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
-//import AuthProvider from './components/authentication/store/AuthProvider';
+import { ExpenseContextProvider } from './components/authentication/store/Expense-context';
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-    //  <AuthProvider>
+root.render( <
+    ExpenseContextProvider >
 
 
     <
@@ -17,8 +17,8 @@ root.render(
 
 
     <
-    /BrowserRouter> 
-    //  </AuthProvider>
+    /BrowserRouter>  <
+    /ExpenseContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

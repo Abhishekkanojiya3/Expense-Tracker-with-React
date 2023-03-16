@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import classes from './Login.module.css';
+import ExpenseContext from "./store/Expense-context";
 
 const ExpenseForm = (props) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isLogin, setIsLogin] = useState(true)
+
+    const expCtx = useContext(ExpenseContext);
+
+
 
     const history = useHistory()
 
@@ -69,6 +74,9 @@ const ExpenseForm = (props) => {
                 .then((data) => {
                     if (isLogin) {
                         console.log(data.idToken);
+                        const regex = /[.@]/g;
+                        const emailId = data.email.replace(regex, "")
+                        expCtx.login(data.idToken, emailId)
                         history.replace('/DummyPage')
                     }
                 })
