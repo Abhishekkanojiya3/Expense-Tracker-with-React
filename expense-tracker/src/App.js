@@ -7,6 +7,7 @@ import ExpenseForm from './components/authentication/ExpenseForm';
 import CompleteProfile from './components/authentication/CompleteProfile';
 import EmailVerification from './components/authentication/EmailVerification';
 import ForgetPassword from './components/authentication/ForgetPassword';
+import Expenses from './components/authentication/Expenses';
 //import AuthContext from './components/authentication/store/auth-context';
 
 function App() {
@@ -48,6 +49,12 @@ function App() {
         exact >
         <
         ForgetPassword / >
+        <
+        /Route> <
+        Route path = "/Expenses"
+        exact >
+        <
+        Expenses / >
         <
         /Route> <
         /Fragment>

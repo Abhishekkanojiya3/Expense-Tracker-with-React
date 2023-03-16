@@ -77,7 +77,8 @@ const ExpenseForm = (props) => {
                         const regex = /[.@]/g;
                         const emailId = data.email.replace(regex, "")
                         expCtx.login(data.idToken, emailId)
-                        history.replace('/EmailVerification')
+                            //history.replace('/EmailVerification')
+                        history.replace('/Expenses')
                     }
                 })
                 .catch((err) => {
