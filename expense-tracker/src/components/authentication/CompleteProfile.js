@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Fragment } from "react";
 import ExpenseContext from "./store/Expense-context";
 import { useContext } from "react";
@@ -38,7 +38,34 @@ const CompleteProfile = () => {
         } else {
             alert(data.error.message)
         }
-    }
+    };
+    useEffect(() => {
+        const getdata = async() => {
+            const get = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDS5Os5LUSXEwpFoKNBTNxC5KRDNMGGTuk", {
+                method: "POST",
+                body: JSON.stringify({
+                    idToken: idToken
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            const data = await get.json();
+            if (get.ok) {
+                console.log(data.users[0].displayName);
+                console.log(data.users[0].photoUrl);
+
+                if (data.users[0].displayName) {
+                    setName(data.users[0].displayName);
+                    setPhotoUrl(data.users[0].photoUrl);
+                }
+
+            } else {
+                alert(data.error.message);
+            }
+        }
+        getdata();
+    }, []);
     return ( <
         Fragment >
         <
