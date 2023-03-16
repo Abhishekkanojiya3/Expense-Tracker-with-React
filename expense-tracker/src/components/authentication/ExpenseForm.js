@@ -95,6 +95,9 @@ const ExpenseForm = (props) => {
         setConfirmPassword("");
 
     };
+    const forgetPass = () => {
+        history.replace('./ForgetPassword')
+    }
 
     const switchAuthHandler = () => {
         setIsLogin((prevState) => !prevState);
@@ -137,7 +140,9 @@ const ExpenseForm = (props) => {
         /div> <
         div className = { classes.login } >
         <
-        button type = "submit" > { isLogin ? "login" : "Sign up" } < /button><br/ > { /* {isLoading && <p>sending request...</p>} */ } <
+        button type = "submit" > { isLogin ? "login" : "Sign up" } < /button><br/ >
+        <
+        button onClick = { forgetPass } > ForgotPassword < /button> <
         h4 type = "button"
         onClick = { switchAuthHandler } > {
             isLogin ?

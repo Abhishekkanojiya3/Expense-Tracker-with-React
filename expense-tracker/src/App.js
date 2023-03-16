@@ -6,6 +6,7 @@ import DummyPage from './components/authentication/DummyPage';
 import ExpenseForm from './components/authentication/ExpenseForm';
 import CompleteProfile from './components/authentication/CompleteProfile';
 import EmailVerification from './components/authentication/EmailVerification';
+import ForgetPassword from './components/authentication/ForgetPassword';
 //import AuthContext from './components/authentication/store/auth-context';
 
 function App() {
@@ -43,7 +44,14 @@ function App() {
         EmailVerification / >
         <
         /Route> <
+        Route path = "/ForgetPassword"
+        exact >
+        <
+        ForgetPassword / >
+        <
+        /Route> <
         /Fragment>
+
     );
 }
 
