@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import classes from './Login.module.css';
 
 const Expenses = () => {
@@ -16,7 +16,7 @@ const Expenses = () => {
     const categoryHandler = (e) => {
         setCategory(e.target.value)
     }
-    const submitHandler = (e) => {
+    const submitHandler = async(e) => {
         e.preventDefault();
 
         setExpense([
@@ -26,12 +26,54 @@ const Expenses = () => {
                 Description: Description,
                 Category: Category
             }
-        ])
+        ]);
+        const post = await fetch("https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses.json", {
+            method: "POST",
+            body: JSON.stringify({
+                spentMoney: spentMoney,
+                Description: Description,
+                Category: Category,
+
+
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const res = await post.json();
+        console.log(res);
         setSpentMoney("");
         setDescription("");
         setCategory("");
 
     }
+    useEffect(() => {
+        const getRealTimeData = async() => {
+            const get = await fetch("https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses.json", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+            const res = await get.json();
+            console.log(res);
+            if (get.ok) {
+                const getExpense = Object.keys(res).map((exp) => {
+                    return {
+                        id: exp,
+                        spentMoney: res[exp].spentMoney,
+                        Description: res[exp].Description,
+                        Category: res[exp].Category
+                    }
+
+                });
+                setExpense(getExpense);
+            } else {
+                alert(res.error.message)
+            }
+        }
+        getRealTimeData();
+    }, [])
     return ( <
         Fragment >
         <
