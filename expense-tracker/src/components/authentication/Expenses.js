@@ -1,11 +1,14 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import classes from './Login.module.css';
+import ExpenseContext from "./store/Expense-context";
 
 const Expenses = () => {
     const [spentMoney, setSpentMoney] = useState("");
     const [Description, setDescription] = useState("");
     const [Category, setCategory] = useState("");
-    const [expense, setExpense] = useState([]);
+    // const [expense,setExpense] = useState([]);
+
+    const expCtx = useContext(ExpenseContext)
 
     const moneyHandler = (e) => {
         setSpentMoney(e.target.value)
@@ -18,62 +21,29 @@ const Expenses = () => {
     }
     const submitHandler = async(e) => {
         e.preventDefault();
+        const exp = {
+            spentMoney: spentMoney,
+            Description: Description,
+            Category: Category
 
-        setExpense([
-            ...expense,
-            {
-                spentMoney: spentMoney,
-                Description: Description,
-                Category: Category
-            }
-        ]);
-        const post = await fetch("https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses.json", {
-            method: "POST",
-            body: JSON.stringify({
-                spentMoney: spentMoney,
-                Description: Description,
-                Category: Category,
-
-
-            }),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        const res = await post.json();
-        console.log(res);
-        setSpentMoney("");
-        setDescription("");
-        setCategory("");
+        }
+        expCtx.postExpense(exp);
+    }
+    const deleteHandler = (expID) => {
+        expCtx.deleteExpense(expID)
 
     }
-    useEffect(() => {
-        const getRealTimeData = async() => {
-            const get = await fetch("https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses.json", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            })
-            const res = await get.json();
-            console.log(res);
-            if (get.ok) {
-                const getExpense = Object.keys(res).map((exp) => {
-                    return {
-                        id: exp,
-                        spentMoney: res[exp].spentMoney,
-                        Description: res[exp].Description,
-                        Category: res[exp].Category
-                    }
+    const editHandler = (exp) => {
+        setSpentMoney(exp.spentMoney);
+        setDescription(exp.Description);
+        setCategory(exp.Category);
 
-                });
-                setExpense(getExpense);
-            } else {
-                alert(res.error.message)
-            }
-        }
-        getRealTimeData();
-    }, [])
+        expCtx.editExpense(exp);
+        console.log(exp);
+    }
+
+
+
     return ( <
         Fragment >
         <
@@ -110,13 +80,13 @@ const Expenses = () => {
         /select> <
         button type = "submit" > Submit < /button> <
         ul > {
-            expense.map((exp) => ( <
-                li key = { exp.spentMoney + exp.Description } >
+            expCtx.expenses.map((exp) => ( <
+                li key = { exp.id } >
                 spentMoney: { exp.spentMoney },
                 Description; { exp.Description },
-                Category: { exp.Category }
-
-                <
+                Category: { exp.Category } <
+                button onClick = { editHandler.bind(null, exp) } > Edit < /button> <
+                button onClick = { deleteHandler.bind(null, exp.id) } > Delete < /button> <
                 /li> 
 
             ))
