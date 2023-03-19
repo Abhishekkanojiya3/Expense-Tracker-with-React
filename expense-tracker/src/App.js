@@ -9,15 +9,17 @@ import EmailVerification from './components/authentication/EmailVerification';
 import ForgetPassword from './components/authentication/ForgetPassword';
 import Expenses from './components/authentication/Expenses';
 import Header from './components/authentication/Header';
+import { useSelector } from 'react-redux';
 //import AuthContext from './components/authentication/store/auth-context';
 
 function App() {
     // const authCtx = useContext(AuthContext);
-    return (
+    const theme = useSelector((state) => state.theme.theme)
+    console.log('state:', useSelector((state) => state));
 
-
-        <
-        Fragment >
+    return ( <
+        div style = {
+            { backgroundColor: theme ? "black" : "white" } } >
 
         <
         Header / >
@@ -59,7 +61,7 @@ function App() {
         Expenses / >
         <
         /Route> <
-        /Fragment>
+        /div>
 
     );
 }
