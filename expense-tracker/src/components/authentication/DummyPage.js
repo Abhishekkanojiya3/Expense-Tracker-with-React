@@ -7,27 +7,24 @@ const DummyPage = () => {
     const expCtx = useContext(ExpenseContext);
     const idToken = expCtx.token;
     const email = expCtx.email;
-    const CompleteProfileHandler = () => {
+    const CompleteProfileHandler = () =>{
         history.replace('/CompleteProfile')
     }
-    const logoutHandler = () => {
-        expCtx.logout(email, idToken);
+    const logoutHandler = () =>{
+        expCtx.logout(email,idToken);
         history.replace('./');
     }
-    return ( <
-        Fragment >
-        <
-        h1 > Welcome to expense tracker!!! < /h1> <
-        div >
-        <
-        button onClick = { logoutHandler } > Logout < /button> <
-        /div> <
-        h4 >
-        your profile is incomplete. { ' ' } <
-        Link to = "/complete-profile"
-        onClick = { CompleteProfileHandler } > Complete Now < /Link> <
-        /h4>        <
-        /Fragment>
+    return ( 
+        <Fragment>
+        <h1> Welcome to expense tracker!!! </h1>
+        <div>
+        <button onClick={logoutHandler}>Logout</button>
+        </div>
+        <h4>
+  your profile is incomplete.{' '}
+  <Link to="/complete-profile" onClick={CompleteProfileHandler}>Complete Now</Link>
+</h4>       
+ </Fragment>
     )
 };
 export default DummyPage;

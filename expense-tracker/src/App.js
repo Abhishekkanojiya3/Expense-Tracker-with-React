@@ -8,6 +8,7 @@ import CompleteProfile from './components/authentication/CompleteProfile';
 import EmailVerification from './components/authentication/EmailVerification';
 import ForgetPassword from './components/authentication/ForgetPassword';
 import Expenses from './components/authentication/Expenses';
+import Header from './components/authentication/Header';
 //import AuthContext from './components/authentication/store/auth-context';
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
         <
         Fragment >
 
-
+        <
+        Header / >
         <
         Route path = "/"
         exact >

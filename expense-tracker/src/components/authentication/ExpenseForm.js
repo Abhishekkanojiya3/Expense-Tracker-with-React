@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import classes from './Login.module.css';
-import ExpenseContext from "./store/Expense-context";
+//import ExpenseContext from "./store/Expense-context";
+import { useDispatch } from "react-redux";
+import { authActions } from "./store/Auth-slice";
 
 const ExpenseForm = (props) => {
     const [email, setEmail] = useState("")
@@ -9,9 +11,9 @@ const ExpenseForm = (props) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isLogin, setIsLogin] = useState(true)
 
-    const expCtx = useContext(ExpenseContext);
+    //  const expCtx = useContext(ExpenseContext);
 
-
+    const dispatch = useDispatch();
 
     const history = useHistory()
 
@@ -76,8 +78,9 @@ const ExpenseForm = (props) => {
                         console.log(data.idToken);
                         const regex = /[.@]/g;
                         const emailId = data.email.replace(regex, "")
-                        expCtx.login(data.idToken, emailId)
+                            //  expCtx.login(data.idToken,emailId)
                             //history.replace('/EmailVerification')
+                        dispatch(authActions.login({ emailId: emailId, token: data.idToken }));
                         history.replace('/Expenses')
                     }
                 })

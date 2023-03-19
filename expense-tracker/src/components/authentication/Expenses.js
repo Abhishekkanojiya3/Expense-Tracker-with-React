@@ -1,8 +1,10 @@
 import { Fragment, useState, useEffect, useContext } from "react";
 import classes from './Login.module.css';
 import ExpenseContext from "./store/Expense-context";
+import { useSelector } from "react-redux";
 
 const Expenses = () => {
+    const expense = useSelector(state => state.expense.expense);
     const [spentMoney, setSpentMoney] = useState("");
     const [Description, setDescription] = useState("");
     const [Category, setCategory] = useState("");
@@ -80,7 +82,7 @@ const Expenses = () => {
         /select> <
         button type = "submit" > Submit < /button> <
         ul > {
-            expCtx.expenses.map((exp) => ( <
+            expense.map((exp) => ( <
                 li key = { exp.id } >
                 spentMoney: { exp.spentMoney },
                 Description; { exp.Description },
