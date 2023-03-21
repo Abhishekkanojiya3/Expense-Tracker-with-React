@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "./Expense-slice";
 
 const ExpenseContext = React.createContext({
     postExpense: () => {},
     getExpense: () => {},
     editExpense: (exp) => {},
-    deleteExpense: (id) => {},
-    expenses: null
+    deleteExpense: (id) => {}
 
 });
 export const ExpenseContextProvider = (props) => {
-
+    const userEmail = localStorage.getItem("email");
     const dispatch = useDispatch();
     // const userEmail = localStorage.getItem('email');
     // const [email,setEmail] = useState(userEmail);
@@ -35,35 +34,35 @@ export const ExpenseContextProvider = (props) => {
 
     //   }
     const postExpenseHandler = (exp) => {
-        const postExpenses = async(exp) => {
-            const post = await fetch(
-                "https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses.json", {
+            const postExpenses = async(exp) => {
+                const post = await fetch(
+                    `https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses/${userEmail}.json`, {
 
-                    method: "POST",
-                    body: JSON.stringify({
-                        spentMoney: exp.spentMoney,
-                        Description: exp.Description,
-                        Category: exp.Category
+                        method: "POST",
+                        body: JSON.stringify({
+                            spentMoney: exp.spentMoney,
+                            Description: exp.Description,
+                            Category: exp.Category
 
-                    }),
-                    headers: {
-                        "Content-Type": "application/json",
+                        }),
+                        headers: {
+                            "Content-Type": "application/json",
+                        }
                     }
-                }
-            )
-            const res = await post.json();
-            console.log(res);
-            getExpenseHandler();
+                )
+                const res = await post.json();
+                console.log(res);
+                getExpenseHandler();
 
+            }
+            postExpenses(exp);
         }
-        postExpenses(exp);
-    }
-    let newExpense = [];
+        // let newExpense=[];
     const getExpenseHandler = () => {
         const getrealtimeExpenses = async() => {
             try {
                 const get = await fetch(
-                    "https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses.json",
+                    `https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses/${userEmail}.json`,
 
                     {
                         method: "GET",
@@ -75,7 +74,8 @@ export const ExpenseContextProvider = (props) => {
                 );
                 const res = await get.json();
                 console.log(res);
-                if (!res.ok) {
+                let newExpense = [];
+                if (!!res) {
                     newExpense = Object.keys(res).map((exp) => {
                         return {
                             id: exp,
@@ -108,7 +108,7 @@ export const ExpenseContextProvider = (props) => {
     const deleteExpHandler = (id) => {
         const deleteExpense = async(id) => {
             try {
-                const del = await fetch(`https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses/${id}.json`, {
+                const del = await fetch(`https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses/${userEmail}/${id}.json`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "applicatin/json"

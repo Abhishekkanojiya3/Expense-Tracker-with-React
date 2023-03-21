@@ -7,18 +7,14 @@ import { Provider } from 'react-redux';
 import store from './components/authentication/store/store';
 import { ExpenseContextProvider } from './components/authentication/store/Expense-context';
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render( <
-    Provider store = { store } >
-    <
-    ExpenseContextProvider >
-    <
-    BrowserRouter >
-    <
-    App / >
-    <
-    /BrowserRouter>  <
-    /ExpenseContextProvider> <
-    /Provider>
+root.render(
+  <Provider store ={store}>
+      <ExpenseContextProvider>
+    <BrowserRouter >
+    <App / >
+    </BrowserRouter> 
+      </ExpenseContextProvider>
+      </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

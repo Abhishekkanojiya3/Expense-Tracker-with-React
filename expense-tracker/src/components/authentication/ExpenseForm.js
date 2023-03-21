@@ -77,10 +77,10 @@ const ExpenseForm = (props) => {
                     if (isLogin) {
                         console.log(data.idToken);
                         const regex = /[.@]/g;
-                        const emailId = data.email.replace(regex, "")
+                        const email = data.email.replace(regex, "")
                             //  expCtx.login(data.idToken,emailId)
                             //history.replace('/EmailVerification')
-                        dispatch(authActions.login({ emailId: emailId, token: data.idToken }));
+                        dispatch(authActions.login({ email: email, token: data.idToken }));
                         history.replace('/Expenses')
                     }
                 })
@@ -114,7 +114,7 @@ const ExpenseForm = (props) => {
         <
         div className = { classes.login } >
         <
-        h1 > { isLogin ? "login" : "sign up" } < /h1>
+        h1 > { isLogin ? "Login" : "Sign up" } < /h1>
 
         <
         input type = "email"
@@ -144,7 +144,7 @@ const ExpenseForm = (props) => {
         /div> <
         div className = { classes.login } >
         <
-        button type = "submit" > { isLogin ? "login" : "Sign up" } < /button><br/ >
+        button type = "submit" > { isLogin ? "Login" : "Sign up" } < /button><br/ >
         <
         button onClick = { forgetPass } > ForgotPassword < /button> <
         h4 type = "button"

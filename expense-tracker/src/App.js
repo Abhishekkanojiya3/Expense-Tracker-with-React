@@ -17,51 +17,33 @@ function App() {
     const theme = useSelector((state) => state.theme.theme)
     console.log('state:', useSelector((state) => state));
 
-    return ( <
-        div style = {
-            { backgroundColor: theme ? "black" : "white" } } >
+    return (   
+        <div style={{ backgroundColor: theme ? "black" : "white" }}
+        >
 
-        <
-        Header / >
-        <
-        Route path = "/"
-        exact >
-        <
-        ExpenseForm / >
-        <
-        /Route>  <
-        Route path = "/DummyPage"
+        <Header />
+        <Route path = "/" exact>
+        <ExpenseForm />
+        </Route> 
+        <Route path = "/DummyPage"
         exact >
         <
         DummyPage / >
-
-        <
-        /Route>  <
-        Route path = "/CompleteProfile"
-        exact >
-        <
-        CompleteProfile / >
-        <
-        /Route> <
-        Route path = "/EmailVerification"
-        exact >
-        <
-        EmailVerification / >
-        <
-        /Route> <
-        Route path = "/ForgetPassword"
-        exact >
-        <
-        ForgetPassword / >
-        <
-        /Route> <
-        Route path = "/Expenses"
-        exact >
-        <
-        Expenses / >
-        <
-        /Route> <
-        /div>
+        
+        </Route> 
+        <Route path="/CompleteProfile" exact>
+        <CompleteProfile />
+      </Route>
+      <Route path="/EmailVerification" exact>
+        <EmailVerification/>
+      </Route>
+      <Route path="/ForgetPassword" exact>
+        <ForgetPassword/>
+      </Route>
+      <Route path="/Expenses" exact>
+        <Expenses/>
+      </Route>
+        </div>
 
     );
 }
