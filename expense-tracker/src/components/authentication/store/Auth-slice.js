@@ -17,7 +17,7 @@ const authSlice = createSlice({
             localStorage.setItem("token", state.token);
             localStorage.setItem("email", state.email);
             state.isLoggedIn = true;
-            console.log("Logged in with email:", state.email);
+                  console.log("Logged in with email:", state.email);
 
         },
         logout(state, action) {
