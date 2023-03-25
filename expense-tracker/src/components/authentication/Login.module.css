@@ -7,7 +7,7 @@ h1 {
     margin: 4rem auto;
     justify-content: center;
     align-items: center;
-    width: 25%;
+    width: 30%;
     text-align: center;
     padding: 10px;
     border-radius: 5px;
@@ -61,4 +61,10 @@ select {
 
 select option {
     font-size: 18px;
+}
+
+.spentMoney {
+    font-weight: bold;
+    color: red;
+    font-size: 24px;
 }
