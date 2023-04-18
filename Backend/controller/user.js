@@ -31,3 +31,28 @@ exports.postSignUpUser = async(req, res, next) => {
         res.status(500).json({ err: "Email_exist" })
     }
 }
+
+exports.postLoginUser = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    console.log('email:', email);
+    console.log('password:', password);
+    User.findAll({ where: { email: email } })
+        .then((users) => {
+            const user = users[0]
+            console.log('user:', user);
+            if (!user) {
+                console.log('user not found');
+
+                return res.status(404).json({ err: "user not found" })
+            }
+
+            if (user.password != password) {
+                console.log('incorrect password');
+
+                return res.status(401).json({ err: "incorrect password" })
+            }
+            console.log('User logged in successfully');
+            res.status(200).json({ message: "User logged in successfully" })
+        })
+}
