@@ -36,7 +36,7 @@ export const ExpenseContextProvider = (props) =>{
       const postExpenseHandler=(exp)=>{
         const postExpenses=async(exp)=>{
           const post=await fetch(
-           `https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses/${userEmail}.json`,
+            'http://localhost:3000/add-expense',
            {
     
             method:"POST",
@@ -65,7 +65,7 @@ export const ExpenseContextProvider = (props) =>{
         {
           try{
           const get=await fetch( 
-            `https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses/${userEmail}.json`,
+            `http://localhost:3000/getExpense`,
     
             {
               method:"GET",
@@ -111,12 +111,12 @@ export const ExpenseContextProvider = (props) =>{
       const deleteExpHandler = (id) =>{
         const deleteExpense = async(id) =>{
           try{
-            const del = await fetch(`https://expense-tracker-login-c34ee-default-rtdb.firebaseio.com/Expenses/${userEmail}/${id}.json`,
+            const del = await fetch(`http://localhost:3000/delete-expense/${id}`,
             {
               method:"DELETE",
               headers:
               {
-                "Content-Type":"applicatin/json"
+                "Content-Type":"application/json"
               }
             })
             const res = await del.json();
