@@ -1,19 +1,20 @@
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "./Expense-slice";
 
 const ExpenseContext = React.createContext({
-    postExpense: ()=>{},
+    postExpense: () => {},
     getExpense: () => {},
-    editExpense: (exp) =>{},
+    editExpense: (exp) => {},
     deleteExpense: (id) => {}
 
 });
-export const ExpenseContextProvider = (props) =>{
-  const userEmail=localStorage.getItem("email");
-  const dispatch = useDispatch();
-    // const userEmail = localStorage.getItem('email');
-    // const [email,setEmail] = useState(userEmail);
+export const ExpenseContextProvider = (props) => {
+    const userEmail = localStorage.getItem("email");
+    const dispatch = useDispatch();
+    const authToken = useSelector(state => state.auth.token)
+        // const userEmail = localStorage.getItem('email');
+        // const [email,setEmail] = useState(userEmail);
 
     // const intitialToken = localStorage.getItem("token");
     // const [token, setToken] = useState(intitialToken);
@@ -33,108 +34,105 @@ export const ExpenseContextProvider = (props) =>{
     //     localStorage.removeItem("email")
 
     //   }
-      const postExpenseHandler=(exp)=>{
-        const postExpenses=async(exp)=>{
-          const post=await fetch(
-            'http://localhost:3000/add-expense',
-           {
-    
-            method:"POST",
-            body:JSON.stringify({
-              spentMoney:exp.spentMoney,
-              Description:exp.Description,
-              Category:exp.Category
-    
-            }),
-            headers:
-            {
-              "Content-Type":"application/json",
+    const postExpenseHandler = (exp) => {
+            const postExpenses = async(exp) => {
+                const post = await fetch(
+                    'http://localhost:3000/add-expense', {
+
+                        method: "POST",
+                        body: JSON.stringify({
+                            spentMoney: exp.spentMoney,
+                            Description: exp.Description,
+                            Category: exp.Category
+
+                        }),
+                        headers: {
+                            "Authorization": authToken,
+                            "Content-Type": "application/json",
+                        }
+                    }
+                )
+                const res = await post.json();
+                console.log(res);
+                getExpenseHandler();
+
             }
-           }
-          )
-          const res=await post.json();
-          console.log(res);
-          getExpenseHandler();
-    
+            postExpenses(exp);
         }
-         postExpenses(exp);
-      }
-      // let newExpense=[];
-      const getExpenseHandler=()=>{
-        const getrealtimeExpenses=async()=>
-        {
-          try{
-          const get=await fetch( 
-            `http://localhost:3000/getExpense`,
-    
-            {
-              method:"GET",
-              headers:{
-                "Content-Type":"application/json",
-    
-              }
+        // let newExpense=[];
+    const getExpenseHandler = () => {
+        const getrealtimeExpenses = async() => {
+            try {
+                const get = await fetch(
+                    'http://localhost:3000/getExpense',
+
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": authToken,
+                            "Content-Type": "application/json",
+
+                        }
+                    }
+                );
+                const res = await get.json();
+                console.log(res);
+                let newExpense = [];
+                if (!!res) {
+                    newExpense = Object.keys(res).map((exp) => {
+                        return {
+                            id: exp,
+                            spentMoney: res[exp].spentMoney,
+                            Description: res[exp].Description,
+                            Category: res[exp].Category
+                        }
+
+                    })
+                }
+                //   setExpenses(newExpense);
+                const totalSpent = newExpense.reduce((currNumber, exp) => {
+                    return currNumber + Number(exp.spentMoney)
+                }, 0)
+                dispatch(expenseActions.addExpense({
+                    newExpense: newExpense,
+                    totalSpent: totalSpent
+                }))
+
+            } catch (err) {
+                alert(err.message);
             }
-          );
-          const res=await get.json();
-          console.log(res);
-          let newExpense=[];
-          if(!!res)
-          {
-            newExpense=Object.keys(res).map((exp)=>{
-              return{
-              id:exp,
-              spentMoney:res[exp].spentMoney,
-              Description:res[exp].Description,
-            Category:res[exp].Category
-              }
-    
-            })
-          }
-         //   setExpenses(newExpense);
-         const totalSpent = newExpense.reduce((currNumber,exp) => {
-          return currNumber+ Number(exp.spentMoney)
-         },0)
-         dispatch(expenseActions.addExpense({
-          newExpense:newExpense,
-        totalSpent:totalSpent}))
-    
-          } catch(err){
-          alert(err.message);
-        }
-      };
-    getrealtimeExpenses();
-      }
-      useEffect(()=>{
+        };
+        getrealtimeExpenses();
+    }
+    useEffect(() => {
         getExpenseHandler();
-      },[])
+    }, [])
 
-      const deleteExpHandler = (id) =>{
-        const deleteExpense = async(id) =>{
-          try{
-            const del = await fetch(`http://localhost:3000/delete-expense/${id}`,
-            {
-              method:"DELETE",
-              headers:
-              {
-                "Content-Type":"application/json"
-              }
-            })
-            const res = await del.json();
-            getExpenseHandler();
-            console.log(res);
-          }
-          catch(err){
-            alert(err.message)
+    const deleteExpHandler = (expenseId) => {
+        const deleteExpense = async(id) => {
+            try {
+                const del = await fetch(`http://localhost:3000/delete-expense/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": authToken,
+                        "Content-Type": "application/json"
+                    }
+                })
+                const res = await del.json();
+                getExpenseHandler();
+                console.log(res);
+            } catch (err) {
+                alert(err.message)
 
-          }
+            }
         }
-        deleteExpense(id);
+        deleteExpense(expenseId);
 
-      }
-      const editExpHandler = (exp) =>{
+    }
+    const editExpHandler = (exp) => {
         deleteExpHandler(exp.id);
-      }
-      const expensecontextVal = {
+    }
+    const expensecontextVal = {
         // token: token,
         // email: email,
         // isLoggedIn: userIsLoggedIn,
@@ -144,13 +142,12 @@ export const ExpenseContextProvider = (props) =>{
         getExpense: getExpenseHandler,
         deleteExpense: deleteExpHandler,
         editExpense: editExpHandler,
-      //  expenses:expenses
-      };
-      return(
-        <ExpenseContext.Provider value = {expensecontextVal}>
-{props.children}
-        </ExpenseContext.Provider>
-      )
+        //  expenses:expenses
+    };
+    return ( <
+        ExpenseContext.Provider value = { expensecontextVal } > { props.children } <
+        /ExpenseContext.Provider>
+    )
 }
 
 export default ExpenseContext;
