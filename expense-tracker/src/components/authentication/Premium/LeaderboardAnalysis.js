@@ -49,8 +49,8 @@ const LeaderboardAnalysis = () => {
         <
         tbody > {
             expenseLeaderboardData.map((data, index) => ( <
-                ShowLeaderboardData name = { data.user ? data.user.name : "" }
-                totalexpense = { data.expenseSum }
+                ShowLeaderboardData name = { data.name }
+                totalexpense = { data.totalexpense }
                 index = { index }
                 />
             ))

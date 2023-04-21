@@ -25,6 +25,10 @@ exports.postAddExpense = async(req, res, next) => {
             spentMoney: spentMoney,
             Description: Description,
             Category: Category
+
+        })
+        req.user.update({
+            totalexpense: req.user.totalexpense + Number.parseInt(spentMoney)
         })
         return res.status(201).json(expense)
     } catch (err) {

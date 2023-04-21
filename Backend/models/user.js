@@ -25,6 +25,10 @@ const User = sequelize.define('user', {
     ispremiumuser: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
+    },
+    totalexpense: {
+        type: Sequelize.DOUBLE,
+        defaultValue: 0
     }
 })
 module.exports = User;

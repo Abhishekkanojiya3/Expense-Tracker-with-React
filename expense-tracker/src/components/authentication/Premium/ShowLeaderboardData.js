@@ -7,7 +7,7 @@ const ShowLeaderboardData = (props) => {
         td style = {
             { width: "30%" } } > { props.name } < /td> <
         td style = {
-            { width: "30%", } } > { props.totalexpense } < /td>
+            { width: "30%", } } > { props.totalexpense == null ? 0 : props.totalexpense } < /td>
 
         <
         /tr>
