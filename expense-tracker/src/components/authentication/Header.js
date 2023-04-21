@@ -4,11 +4,16 @@ import { authActions } from './store/Auth-slice';
 import classes from "./Header.module.css";
 import { useState } from 'react';
 import { themeActions } from './store/Theme-slice';
+import useRazorpay from "react-razorpay";
+import axios from 'axios';
 
 const Header = ()=>{
     const dispatch = useDispatch();
+    const Razorpay = useRazorpay();     
     const history = useHistory();
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const authToken=useSelector(state=>state.auth.token)
+    const authIsPremium=useSelector(state=>state.auth.isPremium)
     const expense = useSelector(state => state.expense.expense);
     const totalSpent = useSelector(state => state.expense.totalSpent);
     const theme = useSelector(state => state.theme.theme);
@@ -61,6 +66,40 @@ const Header = ()=>{
         fileType: "text/csv",
       });
     };
+    const activatePremiumHandler=()=>{
+
+      axios.get('http://localhost:3000/purchase/premiummembership',{headers:{"Authorization":authToken}})
+      .then((response)=>{
+   
+   
+   
+      const options={
+         "key":response.data.key_id,
+         "order_id":response.data.order.id,
+         "handler":async function (response){
+            await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+               order_id:options.order_id,
+               payment_id:response.razorpay_payment_id
+            },{headers:{"Authorization":authToken}})
+            alert('You are a Premium User now')
+            dispatch(authActions.setIsPremium())
+         }
+      }
+      const rzpl=new Razorpay(options);
+      rzpl.open();
+   
+      rzpl.on('payment.failed',async function(response){
+        await axios.post('http://localhost:3000/purchase/failedtransaction',{
+            order_id:options.order_id
+         },{headers:{"Authorization":authToken}})
+         alert("Something went wrong")
+      })
+   })
+   .catch(err=>{
+      console.log(err)
+   })
+   
+    }
     return (
         <header className={classes.header}>
           <h1>Expense Tracker</h1>
@@ -73,15 +112,15 @@ const Header = ()=>{
                 </li>
     
                 <li>
-                {totalSpent>10000 && isLoggedIn &&( <button onClick={changeHandler} >Active premium</button>)}
+                {!authIsPremium && isLoggedIn &&( <button onClick={activatePremiumHandler} >Active premium</button>)}
             </li>
-          <li>
+          {/* <li>
               {totalSpent > 10000 && isLoggedIn && Toggle && (
                 <button type="submit" onClick={switchThemeHandler}>
                   {theme ? "Light mode" : "Dark mode"}
                 </button>
               )}
-               </li>     
+               </li>      */}
           
             <li>
               {totalSpent > 10000 && isLoggedIn && Toggle && (

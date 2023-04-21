@@ -82,6 +82,7 @@ const ExpenseForm = (props) => {
                     console.log(response)
                     dispatch(authActions.login({
                         token: response.data.token,
+                        isPremium: response.data.isPremium
                     }))
                     history.replace("/Expenses");
                 })

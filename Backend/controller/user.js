@@ -61,8 +61,8 @@ exports.postLoginUser = async(req, res, next) => {
                 throw new Error("Something went wrong")
             }
             if (result === true) {
-                console.log('User logged in successfully');
-                res.status(200).json({ message: "User logged in successfully", success: true, token: generateAccessToken(user.id) })
+                console.log(">>>>>>", user.ispremiumuser)
+                res.status(200).json({ message: "User Logged in successfully", success: true, token: generateAccessToken(user.id), isPremium: user.ispremiumuser })
             } else {
                 res.status(401).json({ err: "Incorrect Password", success: false })
             }
