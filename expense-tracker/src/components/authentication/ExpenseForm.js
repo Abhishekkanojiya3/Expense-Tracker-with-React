@@ -8,6 +8,7 @@ import axios from 'axios';
 
 const ExpenseForm = (props) => {
     const [email, setEmail] = useState("")
+    const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isLogin, setIsLogin] = useState(true)
@@ -17,6 +18,10 @@ const ExpenseForm = (props) => {
     const dispatch = useDispatch();
 
     const history = useHistory()
+
+    const nameHandler = (e) => {
+        setName(e.target.value)
+    }
 
     const emailHandler = (e) => {
         setEmail(e.target.value)
@@ -53,6 +58,7 @@ const ExpenseForm = (props) => {
 
             axios
                 .post(url, {
+                    name: name,
                     email: email,
                     password: password,
                 })
@@ -96,6 +102,7 @@ const ExpenseForm = (props) => {
                 //     alert("please enter at least 6 digit");
                 //   }
         }
+        setName("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
@@ -116,6 +123,15 @@ const ExpenseForm = (props) => {
         div className = { classes.login } >
         <
         h1 > { isLogin ? "Login" : "Sign up" } < /h1>
+
+        <
+        input type = "text"
+        id = "name"
+        placeholder = "Name"
+        onChange = { nameHandler }
+        value = { name }
+        required /
+        >
 
         <
         input type = "email"

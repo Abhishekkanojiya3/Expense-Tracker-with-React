@@ -1,0 +1,10 @@
+.leaderboarddata table th {
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.leaderboarddata table td {
+    text-align: center;
+    vertical-align: middle;
+}

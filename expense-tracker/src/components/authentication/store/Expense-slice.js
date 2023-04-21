@@ -2,7 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialExpenseState = {
     expense: [],
-    totalSpent: 0
+    totalSpent: 0,
+    isForm: false,
+    leaderboardData: []
 };
 
 const expenseSlice = createSlice({
@@ -12,6 +14,9 @@ const expenseSlice = createSlice({
         addExpense(state, action) {
             state.expense = action.payload.newExpense;
             state.totalSpent = action.payload.totalSpent;
+        },
+        setLeaderBoardData(state, action) {
+            state.leaderboardData = action.payload
         }
     }
 })
