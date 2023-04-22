@@ -4,7 +4,8 @@ const initialExpenseState = {
     expense: [],
     totalSpent: 0,
     isForm: false,
-    leaderboardData: []
+    leaderboardData: [],
+    downloadHistory: []
 };
 
 const expenseSlice = createSlice({
@@ -17,7 +18,10 @@ const expenseSlice = createSlice({
         },
         setLeaderBoardData(state, action) {
             state.leaderboardData = action.payload
-        }
+        },
+        setDownloadHistory(state, action) {
+            state.downloadHistory = action.payload
+        },
     }
 })
 

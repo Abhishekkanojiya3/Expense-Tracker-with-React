@@ -7,6 +7,8 @@ import { themeActions } from './store/Theme-slice';
 import useRazorpay from "react-razorpay";
 import axios from 'axios';
 import { expenseActions } from './store/Expense-slice';
+import { NavLink } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const Header = () => {
         const dispatch = useDispatch();
@@ -36,37 +38,37 @@ const Header = () => {
             dispatch(themeActions.toggleTheme())
         };
 
-        const downloadFile = ({ data, fileName, fileType }) => {
-            const blob = new Blob([data], { type: fileType });
-            const a = document.createElement("a");
-            a.download = fileName;
-            a.href = window.URL.createObjectURL(blob);
+        // const downloadFile = ({data,fileName,fileType}) => {
+        //   const blob = new Blob([data], {type:fileType});
+        //   const a = document.createElement("a");
+        //   a.download = fileName;
+        //   a.href = window.URL.createObjectURL(blob);
 
-            const clickEvent = new MouseEvent("click", {
-                view: window,
-                bubbles: true,
-                cancelable: true,
-            });
-            a.dispatchEvent(clickEvent);
-            a.remove();
-        };
-        const downloadExpenseHandler = () => {
-            console.log(expense);
+        //   const clickEvent = new MouseEvent("click",{
+        //     view: window,
+        //     bubbles: true,
+        //     cancelable: true,
+        //   });
+        //   a.dispatchEvent(clickEvent);
+        //   a.remove();
+        // };
+        // const downloadExpenseHandler = () => {
+        //   console.log(expense);
 
-            const heading = ["spentMoney,Description,Category"];
+        //   const heading = ["spentMoney,Description,Category"];
 
-            let userCsv = expense.reduce((newArr, exp) => {
-                const { spentMoney, Description, Category } = exp;
-                newArr.push([spentMoney, Description, Category].join(","));
-                return newArr;
-            }, []);
+        //   let userCsv = expense.reduce((newArr, exp) => {
+        //     const {spentMoney, Description, Category } = exp;
+        //     newArr.push([spentMoney, Description, Category].join(","));
+        //     return newArr;
+        //   }, []);
 
-            downloadFile({
-                data: [...heading, ...userCsv].join("\n"),
-                fileName: "expenses.csv",
-                fileType: "text/csv",
-            });
-        };
+        //   downloadFile({
+        //     data: [...heading, ...userCsv].join("\n"),
+        //     fileName: "expenses.csv",
+        //     fileType: "text/csv",
+        //   });
+        // };
         const activatePremiumHandler = () => {
 
             axios.get('http://localhost:3000/purchase/premiummembership', { headers: { "Authorization": authToken } })
@@ -110,6 +112,34 @@ const Header = () => {
                     history.push('/Leaderboard')
                 })
         }
+
+        const downloadExpenseHandler = () => {
+            axios.get('http://localhost:3000/expense/download', { headers: { "Authorization": authToken } })
+                .then((res) => {
+
+                    var a = document.createElement("a");
+                    a.href = res.data.file;
+
+                    a.click();
+
+                })
+                .catch(err => {
+                    alert("Something went wrong")
+                    console.log(err)
+                })
+        }
+
+        const downloadHistoryHandler = () => {
+            axios.get('http://localhost:3000/expense/downloadHistory', { headers: { "Authorization": authToken } })
+                .then((response) => {
+                    const array = [];
+                    for (let i = response.data.length - 1; i >= 0; i--) {
+                        array.push(response.data[i])
+                    }
+                    dispatch(expenseActions.setDownloadHistory(array))
+                    console.log(array)
+                })
+        }
         return ( <
                 header className = { classes.header } >
                 <
@@ -143,14 +173,20 @@ const Header = () => {
                                     }
 
                                     <
-                                    li > {
-                                        totalSpent > 10000 && isLoggedIn && Toggle && ( <
-                                            button type = "submit"
-                                            onClick = { downloadExpenseHandler } >
-                                            Download Expense <
-                                            /button>
-                                        )
-                                    } <
+                                    li >
+
+                                    <
+                                    button type = "submit"
+                                    onClick = { downloadExpenseHandler } >
+                                    Download Expense <
+                                    /button> <
+                                    /li> <
+                                    li >
+                                    <
+                                    Button className = "mx-4"
+                                    onClick = { downloadHistoryHandler } > < NavLink to = '/DownloadHistory'
+                                    style = {
+                                        { textDecoration: "none", color: "white" } } > Download 's History</NavLink></Button> <
                                     /li> <
                                     /ul> <
                                     /nav>

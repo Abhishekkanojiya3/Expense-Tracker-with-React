@@ -11,6 +11,7 @@ import Expenses from './components/authentication/Expenses';
 import Header from './components/authentication/Header';
 import { useSelector } from 'react-redux';
 import Leaderboard from './components/authentication/pages/Leaderboard';
+import DownloadHistory from './components/authentication/pages/DownloadHistory';
 //import AuthContext from './components/authentication/store/auth-context';
 
 function App() {
@@ -73,7 +74,12 @@ function App() {
                             <
                             Redirect to = '/Login' / >
                             <
-                            /Route>}
+                            /Route>} <
+                            Route path = '/DownloadHistory' >
+                            <
+                            DownloadHistory / >
+                            <
+                            /Route>
 
                         <
                         /div>

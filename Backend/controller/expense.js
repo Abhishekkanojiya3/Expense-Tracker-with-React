@@ -1,5 +1,7 @@
 const Expense = require('../models/expense')
 const sequelize = require('../util/database')
+const AWS = require('aws-sdk')
+const DownloadFile = require('../models/downloadfile')
 
 function isStringInValid(string) {
     if (string === undefined || string === null || string.length === 0) {
@@ -72,4 +74,62 @@ exports.deleteExpense = async(req, res, next) => {
         await t.rollback();
         return res.status(500).json({ error: err, success: false })
     }
+}
+const uploadToS3 = (data, filename) => {
+    const BUCKET_NAME = process.env.AWS_IAM_BUCKET_NAME;
+    const IAM_USER_KEY = process.env.AWS_IAM_ACCESS_KEY;
+    const IAM_USER_SECRET = process.env.AWS_IAM_SECRET_KEY;
+
+    let s3bucket = new AWS.S3({
+        accessKeyId: IAM_USER_KEY,
+        secretAccessKey: IAM_USER_SECRET,
+
+    })
+
+
+    var params = {
+        Bucket: BUCKET_NAME,
+        Key: filename,
+        Body: data,
+        ACL: 'public-read'
+    }
+
+    return new Promise((resolve, reject) => {
+        s3bucket.upload(params, (err, s3response) => {
+            if (err) {
+                console.log("Something went wrong", err)
+                reject("Something went wrong")
+            } else {
+                console.log("success", s3response)
+                console.log(s3response.Location)
+                resolve(s3response.Location)
+            }
+        })
+    })
+}
+
+exports.getDownloadExpense = async(req, res, next) => {
+    try {
+        const expenses = await req.user.getExpenses();
+        console.log(expenses)
+
+        const userId = req.user.id;
+        const stringifiedExpenses = JSON.stringify(expenses);
+
+        const filename = `Expense${userId}/${new Date()}.txt`;
+
+        const fileURL = await uploadToS3(stringifiedExpenses, filename);
+        console.log(">>>>>>>", fileURL)
+        req.user.createDownloadfile({ fileURL })
+        res.status(200).json({ file: fileURL, message: 'done', success: true })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ file: "", success: false, error: err })
+    }
+
+}
+
+exports.getDownloadHistory = async(req, res, next) => {
+    const downloadHistory = await req.user.getDownloadfiles()
+    res.status(200).json(downloadHistory)
 }
