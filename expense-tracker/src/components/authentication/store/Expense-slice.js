@@ -15,12 +15,16 @@ const expenseSlice = createSlice({
         addExpense(state, action) {
             state.expense = action.payload.newExpense;
             state.totalSpent = action.payload.totalSpent;
+            console.log(state)
         },
         setLeaderBoardData(state, action) {
             state.leaderboardData = action.payload
         },
         setDownloadHistory(state, action) {
             state.downloadHistory = action.payload
+        },
+        setIsForm(state, action) {
+            state.isForm = action.payload
         },
     }
 })

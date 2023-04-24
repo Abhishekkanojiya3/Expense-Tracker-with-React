@@ -1,16 +1,66 @@
-import { Fragment, useState, useEffect, useContext } from "react";
+import { Fragment, useState, useEffect, useContext, useRef } from "react";
 import classes from './Login.module.css';
 import ExpenseContext from "./store/Expense-context";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { expenseActions } from "./store/Expense-slice";
+import { authActions } from "./store/Auth-slice";
+import { Form } from "react-bootstrap";
+import {Row,Col} from 'react-bootstrap'
 
 const Expenses = () =>{
-    const expense = useSelector(state => state.expense.expense);
+  const expenseList = useSelector(state => state.expense.expense);    
+  console.log(expenseList)                               
+  const authIsLoggedIn=useSelector(state=>state.auth.isLoggedIn)
+    const dispatch=useDispatch();
+  const authToken=useSelector(state=>state.auth.token)
+  const selectInputRef=useRef('');
+     const total=useSelector(state=>state.auth.total)
     const [spentMoney, setSpentMoney] = useState("");
     const [Description,setDescription]=useState("");
     const [Category,setCategory]=useState("");
    // const [expense,setExpense] = useState([]);
 
    const expCtx = useContext(ExpenseContext)
+
+   const activePage=useSelector(state=>state.auth.activePage)
+   const LIMIT=useSelector(state=>state.auth.limit)
+    const selectHandler=()=>{
+     const selectedlimit=selectInputRef.current.value;
+     dispatch(authActions.setLimit(selectedlimit))
+     dispatch(authActions.setActivePage(1))
+    }
+   const totalPagesCalculator=(total,limit)=>{
+     const pages=[];
+     for(let i=1;i<=Math.ceil(total/limit);i++)
+     { console.log("i>>>",i)
+       pages.push(i)
+     }
+     return pages;
+   }
+   useEffect(()=>{
+ 
+     console.log(authIsLoggedIn)
+     if(authIsLoggedIn){
+ 
+   axios.get('http://localhost:3000/expense',{headers:{"Authorization":authToken},params:{page:activePage,size:LIMIT}})
+    .then((response)=>{
+       console.log("expense>>>>>>",response.data.expense) 
+       console.log(response.data)   
+      
+       let expe=response.data.expense                    
+       console.log(expe)
+       let array=[];
+       for(let i=expe.length-1;i>=0;i--){                          
+         array.push(expe[i])               
+       }
+      console.log("array>>",array)
+       dispatch(authActions.setTotal(response.data.total))        
+       dispatch(expenseActions.addExpense(array))
+       })
+ 
+     }
+   },[authIsLoggedIn,activePage,total])
 
     const moneyHandler = (e) =>{
         setSpentMoney(e.target.value)
@@ -44,10 +94,8 @@ const Expenses = () =>{
         console.log(exp);
     }
 
-    const totalSpentMoney = expense.reduce((total, exp) => total + parseFloat(exp.spentMoney), 0);
-
-
-    return(
+     const totalSpentMoney = expenseList.reduce((total, exp) => total + parseFloat(exp.spentMoney), 0);
+    return(                                     
         <Fragment>
             <div className={classes.login}>
             <form onSubmit={submitHandler}>
@@ -89,7 +137,7 @@ const Expenses = () =>{
           </tr>
         </thead>
         <tbody>
-          {expense.map((exp) => (
+          {expenseList.map((exp) => (
             <tr key={exp.id}>
               <td>{exp.spentMoney}</td>
               <td>{exp.Description}</td>
@@ -104,11 +152,46 @@ const Expenses = () =>{
           ))}
         </tbody>
       </table>
-      <div className={classes.total}>
-      <h3 style={{fontWeight: 'bold', marginTop: '1rem'}}>
+       <div className={classes.total}> 
+       <h3 style={{fontWeight: 'bold', marginTop: '1rem'}}>
         Total Spent: {totalSpentMoney.toFixed(2)}
-      </h3>      </div>            </div>
-            
+      </h3>      </div>             
+      </div> 
+     
+
+     
+      <div className="paginationdiv">
+      <nav aria-label="Page navigation example ">
+      <ul className="pagination">
+          {activePage !== 1 && <li className="page-item" onClick={() => dispatch(authActions.setActivePage((activePage - 1)))}>
+            <a className="page-link" href="javascript:void(null">Previous</a>
+          </li>}
+         {totalPagesCalculator(total, LIMIT).map(page => (
+            <li className={`page-item ${activePage === page ? 'active' : ''}`} key={page}>
+              <a 
+              className="page-link" href="javascript:void(null" 
+              onClick={() => dispatch(authActions.setActivePage(page))}
+              >{page}</a>
+            </li>
+         ))}
+        {activePage !== totalPagesCalculator(total, LIMIT).length &&  <li className="page-item" onClick={() => dispatch(authActions.setActivePage(activePage + 1))}>
+            <a className="page-link" href="javascript:void(null)">Next</a>
+          </li>}
+        </ul>
+
+        
+      </nav>
+
+      <Form >
+      Rows per page:<Form.Select aria-label="Default select example" style={{width:"70px"}} ref={selectInputRef} onChange={selectHandler} size="sm">
+
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+    </Form.Select>
+    </Form>
+    </div>  
         </Fragment>
     )
 

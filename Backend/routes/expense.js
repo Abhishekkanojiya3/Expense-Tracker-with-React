@@ -12,6 +12,8 @@ router.get('/expense/download', authMiddleware.authenticate, expenseController.g
 
 router.get('/expense/downloadHistory', authMiddleware.authenticate, expenseController.getDownloadHistory)
 
+router.get('/expense', authMiddleware.authenticate, expenseController.getExpenses)
+
 router.get('/getExpense', authMiddleware.authenticate, expenseController.getExpenses)
 
 router.delete('/delete-expense/:expenseId', authMiddleware.authenticate, expenseController.deleteExpense)

@@ -46,6 +46,27 @@ exports.getExpenses = async(req, res, next) => {
     try {
         const expenses = await req.user.getExpenses()
         return res.status(200).json(expenses)
+        const page = parseInt(req.query.page) || 1; // current page number
+        const size = parseInt(req.query.size) || 10; // number of items per page
+        const offset = (page - 1) * size; // starting index of items for the current page
+        const limit = size; // number of items to return
+
+        const { count, rows } = await Expense.findAndCountAll({
+            where: { userId: req.user.id },
+            offset,
+            limit,
+        });
+
+        const totalPages = Math.ceil(count / size);
+
+        return res.status(200).json({
+            expenses: rows,
+            total: count,
+            totalPages,
+            currentPage: page,
+            pageSize: size,
+        });
+
     } catch (err) {
         return res.status(500).json({ error: err, success: false })
     }
@@ -64,13 +85,15 @@ exports.deleteExpense = async(req, res, next) => {
         const expense = expenses[0]
         expense.destroy();
         await req.user.update({
-            totalexpense: req.user.totalexpense - expense.amount
+            totalexpense: req.user.totalexpense - expense.spentMoney
         }, { transaction: t })
 
         await t.commit();
 
         return res.status(200).json({ success: true, message: "Deleted successfully" })
     } catch (err) {
+        const t = await sequelize.transaction();
+
         await t.rollback();
         return res.status(500).json({ error: err, success: false })
     }

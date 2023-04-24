@@ -162,37 +162,39 @@ const Header = () => {
                     <
                     li > {!authIsPremium && isLoggedIn && ( < button onClick = { activatePremiumHandler } > Active premium < /button>)} <
                             /li> {
-                                authIsPremium && ( < button onClick = { showLeaderboardHandler } > Show Leaderboard < /button>)} {
-                                        /* <li>
-                                                      {totalSpent > 10000 && isLoggedIn && Toggle && (
-                                                        <button type="submit" onClick={switchThemeHandler}>
-                                                          {theme ? "Light mode" : "Dark mode"}
-                                                        </button>
-                                                      )}
-                                                       </li>      */
-                                    }
+                                authIsPremium && isLoggedIn && ( < button onClick = { showLeaderboardHandler } > Show Leaderboard < /button>)} {
+                                            /* <li>
+                                                          {totalSpent > 10000 && isLoggedIn && Toggle && (
+                                                            <button type="submit" onClick={switchThemeHandler}>
+                                                              {theme ? "Light mode" : "Dark mode"}
+                                                            </button>
+                                                          )}
+                                                           </li>      */
+                                        }
 
-                                    <
-                                    li >
+                                        <
+                                        li > {
+                                            isLoggedIn && authIsPremium && ( < button type = "submit"
+                                                onClick = { downloadExpenseHandler } >
+                                                Download Expense <
+                                                /button>)}
 
-                                    <
-                                    button type = "submit"
-                                    onClick = { downloadExpenseHandler } >
-                                    Download Expense <
-                                    /button> <
-                                    /li> <
-                                    li >
-                                    <
-                                    Button className = "mx-4"
-                                    onClick = { downloadHistoryHandler } > < NavLink to = '/DownloadHistory'
-                                    style = {
-                                        { textDecoration: "none", color: "white" } } > Download 's History</NavLink></Button> <
-                                    /li> <
-                                    /ul> <
-                                    /nav>
+                                                <
+                                                /li> <
+                                                li > {
+                                                    isLoggedIn && authIsPremium && ( < Button className = "mx-4"
+                                                        onClick = { downloadHistoryHandler } > < NavLink to = '/DownloadHistory'
+                                                        style = {
+                                                            { textDecoration: "none", color: "white" } } > Download 's History</NavLink></Button>)
+                                                    } <
+                                                    /li>
 
-                                    <
-                                    /header>
-                                );
-                            }
-                            export default Header;
+                                                    <
+                                                    /ul> <
+                                                    /nav>
+
+                                                    <
+                                                    /header>
+                                                );
+                                            }
+                                            export default Header;

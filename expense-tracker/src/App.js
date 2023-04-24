@@ -19,6 +19,10 @@ function App() {
     const theme = useSelector((state) => state.theme.theme)
     const authIsPremium = useSelector(state => state.auth.isPremium)
     const authIsLoggedIn = useSelector(state => state.auth.isLoggedIn)
+    const activePage = useSelector(state => state.auth.activePage)
+
+    const LIMIT = useSelector(state => state.auth.limit)
+    console.log("activrepage", activePage)
     console.log('state:', useSelector((state) => state));
 
     return ( <
